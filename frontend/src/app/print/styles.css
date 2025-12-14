@@ -58,7 +58,7 @@
   @apply flex flex-col items-center justify-center my-3 border-t-2 border-black pt-2;
 }
 .print-qr-section .print-qr-text {
-  @apply text-center text-xs mt-2;
+  @apply text-center text-xs mt-2 break-all;
 }
 
 /* Footer */
