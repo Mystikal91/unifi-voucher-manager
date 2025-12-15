@@ -55,7 +55,7 @@ function VoucherPrintCard({ voucher }: { voucher: Voucher }) {
       <div className="print-voucher-code">{formatCode(voucher.code)}</div>
 
       {fields.map((field) => (
-        <div className="print-info-row">
+        <div key={`${voucher.id}:${field.label}`} className="print-info-row">
           <span className="print-label">{field.label}:</span>
           <span className="print-value">{field.value}</span>
         </div>

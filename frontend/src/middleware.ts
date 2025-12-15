@@ -28,8 +28,8 @@ export function middleware(request: NextRequest) {
     clientIp = clientIp.replace(IPV6_IPV4_MAPPED_PREFIX, "");
   }
 
-  // Restrict access based on GUEST_SUBNET env variable
-  const guestSubnet = process.env.GUEST_SUBNET;
+  // Restrict access based on GUEST_SUBNETWORK env variable
+  const guestSubnet = process.env.GUEST_SUBNETWORK;
   if (guestSubnet) {
     if (
       !guestAllowedPaths.includes(pathname) &&
