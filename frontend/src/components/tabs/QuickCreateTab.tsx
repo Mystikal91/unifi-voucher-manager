@@ -55,7 +55,8 @@ export default function QuickCreateTab() {
           <option value={240}>4 Hours</option>
           <option value={1440}>24 Hours</option>
           <option value={4320}>3 Days</option>
-          <option value={10080}>1 Week</option>
+          <option value={10080}>7 Days</option>
+          <option value={43200}>30 Days</option>
         </select>
 
         <label className="block font-medium mb-1">Name</label>
