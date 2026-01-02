@@ -53,8 +53,8 @@ impl<'a> UnifiAPI<'a> {
             .timeout(Duration::from_secs(30))
             .connect_timeout(Duration::from_secs(10))
             .default_headers(headers)
-            .danger_accept_invalid_certs(!environment.unifi_has_valid_cert)
-            .use_rustls_tls()
+            .tls_danger_accept_invalid_certs(!environment.unifi_has_valid_cert)
+            .tls_backend_rustls()
             .build()
             .expect("Failed to build UniFi reqwest client");
 
