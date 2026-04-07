@@ -95,7 +95,7 @@ function VoucherPrintCard({ voucher }: { voucher: Voucher }) {
           <strong className="text-sm">ID:</strong> {voucher.id}
         </div>
         <div>
-          <strong className="text-sm">Stampato:</strong>{" "}
+          <strong className="text-sm">Stampato il:</strong>{" "}
           {new Date().toLocaleString("it-IT")}
         </div>
       </div>
