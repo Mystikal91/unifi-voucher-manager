@@ -64,29 +64,29 @@ export default function VoucherModal({ voucher, onClose }: Props) {
           <div className="space-y-4">
             {(
               [
-                ["Status", formatStatus(details.expired, details.activatedAt)],
-                ["Name", details.name || "No note"],
-                ["Created", details.createdAt],
+                ["Stato", formatStatus(details.expired, details.activatedAt)],
+                ["Nome", details.name || "No note"],
+                ["Creato", details.createdAt],
                 ...(details.activatedAt
-                  ? [["Activated", details.activatedAt]]
+                  ? [["Attivato", details.activatedAt]]
                   : []),
-                ...(details.expiresAt ? [["Expires", details.expiresAt]] : []),
-                ["Duration", formatDuration(details.timeLimitMinutes)],
+                ...(details.expiresAt ? [["Scaduto", details.expiresAt]] : []),
+                ["Durata", formatDuration(details.timeLimitMinutes)],
                 [
-                  "Guest Usage",
+                  "Utilizzi",
                   formatGuestUsage(
                     details.authorizedGuestCount,
                     details.authorizedGuestLimit,
                   ),
                 ],
                 [
-                  "Data Limit",
+                  "Limite Dati",
                   details.dataUsageLimitMBytes
                     ? formatBytes(details.dataUsageLimitMBytes * 1024 * 1024)
-                    : "Unlimited",
+                    : "Illimitato",
                 ],
-                ["Download Speed", formatSpeed(details.rxRateLimitKbps)],
-                ["Upload Speed", formatSpeed(details.txRateLimitKbps)],
+                ["Velocità Download", formatSpeed(details.rxRateLimitKbps)],
+                ["Velocità Upload", formatSpeed(details.txRateLimitKbps)],
                 ["ID", details.id],
               ] as [string, any][]
             ).map(([label, value]) => (
