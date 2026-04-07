@@ -32,12 +32,12 @@ export default function QuickCreateTab() {
         form.reset();
       } else {
         notify(
-          "Voucher created, but its data was found in response",
+          "Voucher creato, ma i suoi dati sono stati trovati nella risposta",
           "warning",
         );
       }
     } catch {
-      notify("Failed to create voucher", "error");
+      notify("Impossibile creare il voucher", "error");
     }
     setLoading(false);
   };
@@ -49,21 +49,21 @@ export default function QuickCreateTab() {
   return (
     <div>
       <form onSubmit={handleSubmit} className="card max-w-lg mx-auto space-y-6">
-        <label className="block font-medium mb-1">Duration</label>
+        <label className="block font-medium mb-1">Durata</label>
         <select name="duration" defaultValue="1440" required>
-          <option value={60}>1 Hour</option>
-          <option value={240}>4 Hours</option>
-          <option value={1440}>24 Hours</option>
-          <option value={4320}>3 Days</option>
-          <option value={10080}>7 Days</option>
-          <option value={43200}>30 Days</option>
+          <option value={60}>1 Ora</option>
+          <option value={240}>4 Ore</option>
+          <option value={1440}>24 Ore</option>
+          <option value={4320}>3 Giorni</option>
+          <option value={10080}>7 Giorni</option>
+          <option value={43200}>30 Giorni</option>
         </select>
 
-        <label className="block font-medium mb-1">Name</label>
-        <input name="name" defaultValue="Quick Voucher" required />
+        <label className="block font-medium mb-1">Nome</label>
+        <input name="name" defaultValue="Voucher veloce" required />
 
         <button type="submit" disabled={loading} className="btn-primary w-full">
-          {loading ? "Creating…" : "Create Voucher"}
+          {loading ? "Creazione…" : "Crea Voucher"}
         </button>
       </form>
 
