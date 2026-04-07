@@ -53,7 +53,7 @@ export default function VoucherModal({ voucher, onClose }: Props) {
       case "error":
         return (
           <div className="card text-status-danger text-center">
-            Failed to load detailed information
+            Impossibile caricare dettagli aggiuntivi
           </div>
         );
       case "ok":
