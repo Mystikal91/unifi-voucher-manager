@@ -15,7 +15,7 @@ use crate::{
 
 const UNIFI_API_ROUTE: &str = "proxy/network/integration/v1/sites";
 const DATE_TIME_FORMAT: &str = "%Y-%m-%d %H:%M:%S";
-const ROLLING_VOUCHER_NAME_PREFIX: &str = "[ROLLING]";
+const ROLLING_VOUCHER_NAME_PREFIX: &str = "[ROTAZIONE]";
 const FRAGMENT: &AsciiSet = &CONTROLS.add(b'[').add(b']');
 
 pub static UNIFI_API: OnceLock<UnifiAPI> = OnceLock::new();
