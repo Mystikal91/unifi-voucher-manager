@@ -11,9 +11,9 @@ export default function ThemeSwitcher() {
       onChange={(e) => setTheme(e.target.value as Theme)}
       className="text-sm"
     >
-      <option value="system">⚙️ System</option>
-      <option value="light">🌞 Light</option>
-      <option value="dark">🌙 Dark</option>
+      <option value="system">⚙️ Sistema</option>
+      <option value="light">🌞 Chiaro</option>
+      <option value="dark">🌙 Scuro</option>
     </select>
   );
 }
