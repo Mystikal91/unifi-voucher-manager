@@ -116,7 +116,7 @@ export default function CustomCreateTab() {
             label: "Nome",
             name: "name",
             type: "text",
-            props: { required: true, defaultValue: "Custom Voucher" },
+            props: { required: true, defaultValue: "Voucher Personalizzato" },
           },
         ].map(({ label, name, type, props }) => (
           <div key={name}>
