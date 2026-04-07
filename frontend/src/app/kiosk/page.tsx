@@ -48,7 +48,7 @@ export default function KioskPage() {
       case "error":
         return (
           <div className="text-center text-5xl sm:text-6xl md:text-7xl text-status-danger">
-            Could not load rolling voucher
+            Impossibile caricare voucher a rotazione
           </div>
         );
       case "ok":
@@ -60,10 +60,10 @@ export default function KioskPage() {
             {qrAvailable && <WifiQr className="w-full sm:h-80 md:h-96 " />}
             <div className={`text-center ${qrAvailable && "md:text-left"}`}>
               <h2 className="font-medium mb-4 text-3xl sm:text-4xl md:text-5xl">
-                Voucher Code
+                Codice Voucher
               </h2>
               <div className="voucher-code tracking-widest text-5xl sm:text-6xl md:text-7xl">
-                {voucher ? formatCode(voucher.code) : "No voucher available"}
+                {voucher ? formatCode(voucher.code) : "Nessun Voucher Disponibile"}
               </div>
             </div>
           </div>
