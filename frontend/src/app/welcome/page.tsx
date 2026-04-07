@@ -38,10 +38,10 @@ export default function WelcomePage() {
       <div className="w-full text-center font-bold text-4xl sm:text-5xl md:text-7xl lg:text-9xl leading-snug">
         {ssid ? (
           <>
-            Welcome to <span className="text-brand font-mono">{ssid}</span>!
+            Benvenuto/a su <span className="text-brand font-mono">{ssid}</span>!
           </>
         ) : (
-          "Welcome!"
+          "Benvenuto!"
         )}
       </div>
     </main>
