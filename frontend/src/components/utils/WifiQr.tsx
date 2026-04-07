@@ -67,7 +67,7 @@ export default function WifiQr({
               level="H"
               bgColor="transparent"
               fgColor="currentColor"
-              title={`Wi-Fi access: ${wifiConfig.ssid}`}
+              title={`Accesso Wi-Fi: ${wifiConfig.ssid}`}
               imageSettings={{
                 src: imageSrc,
                 height: Math.floor(qrSize / 4),
@@ -76,11 +76,11 @@ export default function WifiQr({
               }}
             />
             <p className="text-sm text-muted">
-              Scan to join <strong>{wifiConfig.ssid}</strong>
+              Scansiona per entrare in <strong>{wifiConfig.ssid}</strong>
             </p>
           </>
         ) : (
-          <p className="text-sm text-muted">No Wi‑Fi credentials configured.</p>
+          <p className="text-sm text-muted">Nessuna credenziale Wi-Fi configurata.</p>
         )}
       </div>
     </div>
