@@ -45,7 +45,7 @@ export default function VouchersTab() {
       const res = await api.getAllVouchers();
       setVouchers(res.data || []);
     } catch {
-      notify("Failed to load vouchers", "error");
+      notify("Impossibile creare i voucher", "error");
     }
     setLoading(false);
   }, []);
@@ -99,15 +99,15 @@ export default function VouchersTab() {
         const count = res.vouchersDeleted || 0;
         if (count > 0) {
           notify(
-            `Successfully deleted ${count} ${kind_word} voucher${count === 1 ? "" : "s"}`,
+            `${count} voucher${count === 1 ? "" : "s"} ${kind_word} cancellat${count === 1 ? "o" : "i"} con successo`,
             "success",
           );
           setSelectedIds(new Set());
         } else {
-          notify(`No ${kind_word} vouchers were deleted`, "info");
+          notify(`Nessun vouchers ${kind_word} cancellato`, "info");
         }
       } catch {
-        notify(`Failed to delete ${kind_word} vouchers`, "error");
+        notify(`Impossibile cancellare voucher ${kind_word}`, "error");
       }
       setBusy(false);
       cancelEdit();
@@ -144,7 +144,7 @@ export default function VouchersTab() {
         <div className="relative">
           <input
             type="text"
-            placeholder="Search vouchers by name..."
+            placeholder="Cerca voucher per nome..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -162,10 +162,10 @@ export default function VouchersTab() {
         {!editMode ? (
           <>
             <button onClick={startEdit} className="btn-primary">
-              Edit Mode
+              Modalità Modifica
             </button>
             <button onClick={load} className="btn-secondary">
-              Refresh
+              Aggiorna
             </button>
           </>
         ) : (
@@ -175,42 +175,42 @@ export default function VouchersTab() {
               disabled={!filteredVouchers.length}
               className="btn-primary"
             >
-              Select All
+              Seleziona tutti
             </button>
             <button
               onClick={() => handlePrintClick("grid")}
               disabled={!selectedVouchers.length}
               className="btn-secondary"
             >
-              Print (Tile)
+              Stampa (Casella)
             </button>
             <button
               onClick={() => handlePrintClick("list")}
               disabled={!selectedVouchers.length}
               className="btn-secondary"
             >
-              Print (List)
+              Stampa (Lista)
             </button>
             <button
               onClick={() => deleteVouchers("selected")}
               disabled={busy || !selectedVouchers.length}
               className="btn-danger"
             >
-              Delete Selected
+              Cancella Selezionato
             </button>
             <button
               onClick={() => deleteVouchers("expired")}
               disabled={busy || !expiredIds.length}
               className="btn-warning"
             >
-              Delete Expired
+              Cancella Scaduti
             </button>
             <button onClick={cancelEdit} className="btn-primary">
-              Cancel
+              Annulla
             </button>
             {busy ? <Spinner /> : <></>}
             <span className="text-sm text-secondary font-bold ml-auto">
-              {selectedVouchers.length} selected
+              {selectedVouchers.length} selezionat${selectedVouchers.length === 1 ? "o" : "i"}
             </span>
           </>
         )}
@@ -218,7 +218,7 @@ export default function VouchersTab() {
 
       {searchQuery && (
         <div className="mb-4 text-sm text-secondary">
-          Showing {filteredVouchers.length} of {vouchers.length} vouchers
+          Mostrando {filteredVouchers.length} di {vouchers.length} vouchers
         </div>
       )}
 
@@ -227,8 +227,8 @@ export default function VouchersTab() {
       ) : !filteredVouchers.length ? (
         <div className="text-center py-8 text-secondary">
           {searchQuery
-            ? "No vouchers found matching your search"
-            : "No vouchers found"}
+            ? "Nessun voucher trovato che corrisponde alla ricerca"
+            : "Nessun voucher trovato"}
         </div>
       ) : (
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
