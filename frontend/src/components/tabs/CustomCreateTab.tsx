@@ -41,7 +41,7 @@ export default function CustomCreateTab() {
     const unit = String(data.get("durationUnit") || "minutes") as TimeUnit;
 
     if (!Number.isFinite(rawDuration) || rawDuration <= 0) {
-      notify("Duration must be a positive number", "error");
+      notify("La durata deve essere un valore positivo", "error");
       setLoading(false);
       return;
     }
@@ -52,7 +52,7 @@ export default function CustomCreateTab() {
 
     if (durationMinutes > MAX_VOUCHER_DURATION_MINUTES) {
       notify(
-        `Duration too long. Maximum allowed is ${MAX_VOUCHER_DURATION_MINUTES} minutes.`,
+        `Durata troppo lunga. Il massimo permesso è ${MAX_VOUCHER_DURATION_MINUTES} minuti.`,
         "error",
       );
       setLoading(false);
@@ -77,12 +77,12 @@ export default function CustomCreateTab() {
         form.reset();
       } else {
         notify(
-          "Voucher created, but its data was found in response",
+          "Voucher creato, ma i suoi dati sono stati trovati nella risposta",
           "warning",
         );
       }
     } catch {
-      notify("Failed to create voucher", "error");
+      notify("Impossibile creare il voucher", "error");
     }
     setLoading(false);
   };
@@ -113,7 +113,7 @@ export default function CustomCreateTab() {
             },
           },
           {
-            label: "Name",
+            label: "Nome",
             name: "name",
             type: "text",
             props: { required: true, defaultValue: "Custom Voucher" },
@@ -205,7 +205,7 @@ export default function CustomCreateTab() {
           </div>
         ))}
         <button type="submit" disabled={loading} className="btn-primary w-full">
-          {loading ? "Creating…" : "Create Custom Voucher"}
+          {loading ? "Creazione…" : "Crea Voucher personalizzato"}
         </button>
       </form>
       {newVoucher && <SuccessModal voucher={newVoucher} onClose={closeModal} />}
