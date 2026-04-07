@@ -51,7 +51,7 @@ const VoucherCard = ({ voucher, selected, editMode, onClick }: Props) => {
 
       <div className="space-y-1 text-sm text-secondary">
         <div className="flex justify-between">
-          <span>Guests Used:</span>
+          <span>Num. utilizzi:</span>
           <span>
             {formatGuestUsage(
               voucher.authorizedGuestCount,
@@ -61,13 +61,13 @@ const VoucherCard = ({ voucher, selected, editMode, onClick }: Props) => {
         </div>
 
         <div className="flex justify-between">
-          <span>Session Time:</span>
+          <span>Tempo di Sessione:</span>
           <span>{formatDuration(voucher.timeLimitMinutes)}</span>
         </div>
 
         {voucher.activatedAt && (
           <div className="flex justify-between">
-            <span>First Used:</span>
+            <span>Primo utilizzo:</span>
             <span className="text-xs">{voucher.activatedAt}</span>
           </div>
         )}
@@ -79,7 +79,7 @@ const VoucherCard = ({ voucher, selected, editMode, onClick }: Props) => {
             {formatStatus(voucher.expired, voucher.activatedAt)}
           </span>
           {voucher.expiresAt && (
-            <span className="text-xs">Expires: {voucher.expiresAt}</span>
+            <span className="text-xs">Scade: {voucher.expiresAt}</span>
           )}
         </div>
       </div>
