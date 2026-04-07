@@ -76,7 +76,7 @@ function VoucherPrintCard({ voucher }: { voucher: Voucher }) {
             </>
           )}
           <div className="print-qr-text">
-            <strong>Network:</strong> {wifiConfig.ssid}
+            <strong>Rete:</strong> {wifiConfig.ssid}
             <br />
             {wifiConfig.type === "nopass" ? (
               "Nessuna Password"
@@ -85,7 +85,7 @@ function VoucherPrintCard({ voucher }: { voucher: Voucher }) {
                 <strong>Password:</strong> {wifiConfig.password}
               </>
             )}
-            {wifiConfig.hidden && <div>(Hidden Network)</div>}
+            {wifiConfig.hidden && <div>(Rete Nascosta)</div>}
           </div>
         </div>
       )}
