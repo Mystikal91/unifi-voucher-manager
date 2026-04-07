@@ -55,8 +55,8 @@ export default function Header() {
             onClick={() => setShowWifi(true)}
             className="btn p-1"
             disabled={!qrAvailable}
-            aria-label="Open Wi‑Fi QR code"
-            title="Open Wi‑Fi QR code"
+            aria-label="Apri QR code Wi‑Fi"
+            title="Apri QR code Wi‑Fi"
           >
             <img
               src="/qr.svg"
