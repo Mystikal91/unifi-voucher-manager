@@ -9,19 +9,19 @@ import { useState } from "react";
 const TAB_CONFIG = [
   {
     id: "vouchers",
-    label: "View Vouchers",
+    label: "Vedi Voucher",
     component: VouchersTab,
     enabled: true,
   },
   {
     id: "quick",
-    label: "Quick Create",
+    label: "Creazione Veloce",
     component: QuickCreateTab,
     enabled: true,
   },
   {
     id: "custom",
-    label: "Custom Create",
+    label: "Creazione Personalizzata",
     component: CustomCreateTab,
     enabled: true,
   },
