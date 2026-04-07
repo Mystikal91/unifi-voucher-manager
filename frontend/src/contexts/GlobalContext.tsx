@@ -34,7 +34,7 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({
       setWifiConfig(cfg);
       setWifiString(str);
     } catch (e) {
-      console.warn(`Could not generate WiFi configuration: ${e}`);
+      console.warn(`Impossibile generare configurazione WiFi: ${e}`);
     }
   }, []);
 
