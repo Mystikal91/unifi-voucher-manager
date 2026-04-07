@@ -102,7 +102,7 @@ export default function CustomCreateTab() {
       <form onSubmit={handleSubmit} className="card max-w-lg mx-auto space-y-6">
         {[
           {
-            label: "Number",
+            label: "Quantità",
             name: "count",
             type: "number",
             props: {
@@ -126,7 +126,7 @@ export default function CustomCreateTab() {
         ))}
 
         <div>
-          <label className="block font-medium mb-1">Duration</label>
+          <label className="block font-medium mb-1">Durata</label>
           <div className="flex-center gap-2">
             <input
               name="duration"
@@ -150,32 +150,32 @@ export default function CustomCreateTab() {
               className="w-auto"
               defaultValue="minutes"
             >
-              <option value="minutes">Minutes</option>
-              <option value="hours">Hours</option>
-              <option value="days">Days</option>
+              <option value="minutes">Minuti</option>
+              <option value="hours">Ore</option>
+              <option value="days">Giorni</option>
             </select>
           </div>
         </div>
 
         {[
           {
-            label: "Guest Limit",
+            label: "Limite utenti",
             name: "guests",
             type: "number",
             props: {
               min: MIN_VOUCHER_GUESTS,
               max: MAX_VOUCHER_GUESTS,
-              placeholder: "Unlimited",
+              placeholder: "Illimitato",
             },
           },
           {
-            label: "Data Limit (MB)",
+            label: "Limite dati (MB)",
             name: "data",
             type: "number",
             props: {
               min: MIN_VOUCHER_DATA_MB,
               max: MAX_VOUCHER_DATA_MB,
-              placeholder: "Unlimited",
+              placeholder: "Illimitato",
             },
           },
           {
@@ -185,7 +185,7 @@ export default function CustomCreateTab() {
             props: {
               min: MIN_VOUCHER_DOWNLOAD_KBPS,
               max: MAX_VOUCHER_DOWNLOAD_KBPS,
-              placeholder: "Unlimited",
+              placeholder: "Illimitato",
             },
           },
           {
@@ -195,7 +195,7 @@ export default function CustomCreateTab() {
             props: {
               min: MIN_VOUCHER_UPLOAD_KBPS,
               max: MAX_VOUCHER_UPLOAD_KBPS,
-              placeholder: "Unlimited",
+              placeholder: "Illimitato",
             },
           },
         ].map(({ label, name, type, props }) => (
