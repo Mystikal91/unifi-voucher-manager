@@ -17,7 +17,7 @@ export default function WifiQrModal({ onClose }: Props) {
         <WifiQr className="w-full h-72" sizeRatio={0.88} />
 
         <p className="text-sm text-muted text-center">
-          Scan this QR code to join the network
+          Scansiona questo QR Code per entrare nella rete
         </p>
       </div>
     </Modal>
