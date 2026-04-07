@@ -34,7 +34,7 @@ function VoucherPrintCard({ voucher }: { voucher: Voucher }) {
       label: "Limite Dati",
       value: voucher.dataUsageLimitMBytes
         ? formatBytes(voucher.dataUsageLimitMBytes * 1024 * 1024)
-        : "Unlimited",
+        : "Illimitato",
     },
     {
       label: "Velocità Download",
