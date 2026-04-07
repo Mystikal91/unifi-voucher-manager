@@ -3,7 +3,7 @@ export function formatCode(code: string) {
 }
 
 export function formatMaxGuests(maxGuests: number | null | undefined) {
-  return !maxGuests ? "Unlimited" : Math.max(maxGuests, 0);
+  return !maxGuests ? "Illimitato" : Math.max(maxGuests, 0);
 }
 
 export function formatStatus(
@@ -22,9 +22,9 @@ export function formatDuration(m: number | null | undefined) {
     mins = m % 60;
   return (
     [
-      days > 0 ? days + "d" : "",
-      hours > 0 ? hours + "h" : "",
-      mins > 0 ? mins + "m" : "",
+      days > 0 ? days + "g" : "",
+      hours > 0 ? hours + "m" : "",
+      mins > 0 ? mins + "s" : "",
     ]
       .filter(Boolean)
       .join(" ") || "0m"
