@@ -46,8 +46,8 @@ export default function Header() {
           <button
             onClick={() => router.push("/kiosk")}
             className="btn text-sm p-1 px-2"
-            aria-label="Open Kiosk"
-            title="Open Kiosk"
+            aria-label="Apri Kiosk"
+            title="Apri Kiosk"
           >
             📺
           </button>
