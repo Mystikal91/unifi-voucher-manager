@@ -10,13 +10,13 @@ export function formatStatus(
   expired: boolean,
   activatedAt: string | null | undefined,
 ) {
-  if (expired) return "Expired";
-  if (activatedAt) return "Active";
-  return "Available";
+  if (expired) return "Scaduto";
+  if (activatedAt) return "Attivo";
+  return "Disponibile";
 }
 
 export function formatDuration(m: number | null | undefined) {
-  if (!m) return "Unlimited";
+  if (!m) return "Illimitato";
   const days = Math.floor(m / 1440),
     hours = Math.floor((m % 1440) / 60),
     mins = m % 60;
@@ -32,7 +32,7 @@ export function formatDuration(m: number | null | undefined) {
 }
 
 export function formatBytes(b: number | null | undefined) {
-  if (!b) return "Unlimited";
+  if (!b) return "Illimitato";
   const units = ["B", "KB", "MB", "GB", "TB"];
   let size = b,
     i = 0;
@@ -44,7 +44,7 @@ export function formatBytes(b: number | null | undefined) {
 }
 
 export function formatSpeed(kbps: number | null | undefined) {
-  if (!kbps) return "Unlimited";
+  if (!kbps) return "Illimitato";
   return kbps >= 1024
     ? `${(kbps / 1024).toFixed(kbps < 10240 ? 1 : 0)} Mbps`
     : `${kbps} Kbps`;
