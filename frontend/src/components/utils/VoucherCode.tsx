@@ -19,9 +19,9 @@ export default function VoucherCode({ voucher, contentClassName = "" }: Props) {
     if (await copyText(voucher.code)) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-      notify("Code copied to clipboard!", "success");
+      notify("Codice copiato negli appunti!", "success");
     } else {
-      notify("Failed to copy code", "error");
+      notify("Impossibile copiare codice", "error");
     }
   };
 
@@ -42,10 +42,10 @@ export default function VoucherCode({ voucher, contentClassName = "" }: Props) {
       </div>
       <div className="flex-center gap-3">
         <button onClick={handleCopy} className="btn-success">
-          Copy Code
+          Copia Codice
         </button>
         <button onClick={handlePrint} className="btn-primary">
-          Print Voucher
+          Stampa Voucher
         </button>
       </div>
     </div>
