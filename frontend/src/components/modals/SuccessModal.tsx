@@ -11,7 +11,7 @@ export default function SuccessModal({ voucher, onClose }: Props) {
   return (
     <Modal onClose={onClose} contentClassName="max-w-sm">
       <h2 className="text-2xl font-bold text-primary mb-4 text-center">
-        Voucher Creata!
+        Voucher Creato!
       </h2>
       <VoucherCode voucher={voucher} />
     </Modal>
