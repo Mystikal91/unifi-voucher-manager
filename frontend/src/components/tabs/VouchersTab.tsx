@@ -210,7 +210,7 @@ export default function VouchersTab() {
             </button>
             {busy ? <Spinner /> : <></>}
             <span className="text-sm text-secondary font-bold ml-auto">
-              {selectedVouchers.length} selezionat${selectedVouchers.length === 1 ? "o" : "i"}
+              {selectedVouchers.length} selezionat{selectedVouchers.length === 1 ? "o" : "i"}
             </span>
           </>
         )}
