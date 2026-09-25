@@ -64,7 +64,10 @@ async fn main() {
     // =================================
     // Start scheduled tasks
     // =================================
-    tokio::spawn(run_daily_purge(environment.timezone));
+    tokio::spawn(run_daily_purge(
+        environment.timezone,
+        environment.purge_all_expired_vouchers,
+    ));
 
     // =================================
     // Setup Axum server
@@ -76,10 +79,11 @@ async fn main() {
 
     let app = Router::new()
         .route("/api/health", get(health_check_handler))
-        .route("/api/vouchers", get(get_vouchers_handler))
+        .route("/api/vouchers", get(get_all_vouchers_handler))
         .route("/api/vouchers", post(create_voucher_handler))
         .route("/api/vouchers/details", get(get_voucher_details_handler))
         .route("/api/vouchers/expired", delete(delete_expired_handler))
+        .route("/api/vouchers/filtered", get(get_vouchers_filtered_handler))
         .route(
             "/api/vouchers/expired/rolling",
             delete(delete_expired_rolling_handler),

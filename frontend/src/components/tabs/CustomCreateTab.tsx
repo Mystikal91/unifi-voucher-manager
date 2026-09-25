@@ -18,30 +18,30 @@ import {
 } from "@/utils/api";
 import { map } from "@/utils/functional";
 import { notify } from "@/utils/notifications";
-import { useCallback, useState, FormEvent } from "react";
+import { useCallback, useState, SubmitEvent } from "react";
 
 type TimeUnit = "minutes" | "hours" | "days";
 
 export default function CustomCreateTab() {
   const [loading, setLoading] = useState(false);
-  const [newVoucher, setNewVoucher] = useState<Voucher | null>(null);
+  const [newVouchers, setNewVouchers] = useState<Voucher[] | null>(null);
   const [durationUnit, setDurationUnit] = useState<TimeUnit>("minutes");
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
     setLoading(true);
 
     const parseNumber = (x: FormDataEntryValue) =>
       x !== "" ? Number(x) : null;
 
-    const form = e.currentTarget;
+    const form = e.currentTarget as HTMLFormElement;
     const data = new FormData(form);
 
     const rawDuration = Number(data.get("duration"));
     const unit = String(data.get("durationUnit") || "minutes") as TimeUnit;
 
     if (!Number.isFinite(rawDuration) || rawDuration <= 0) {
-      notify("La durata deve essere un valore positivo", "error");
+      notify("Duration must be a positive number", "error");
       setLoading(false);
       return;
     }
@@ -52,7 +52,7 @@ export default function CustomCreateTab() {
 
     if (durationMinutes > MAX_VOUCHER_DURATION_MINUTES) {
       notify(
-        `Durata troppo lunga. Il massimo permesso è ${MAX_VOUCHER_DURATION_MINUTES} minuti.`,
+        `Duration too long. Maximum allowed is ${MAX_VOUCHER_DURATION_MINUTES} minutes`,
         "error",
       );
       setLoading(false);
@@ -71,18 +71,11 @@ export default function CustomCreateTab() {
 
     try {
       const res = await api.createVoucher(payload);
-      const voucher = res.vouchers?.[0];
-      if (voucher) {
-        setNewVoucher(voucher);
-        form.reset();
-      } else {
-        notify(
-          "Voucher creato, ma i suoi dati sono stati trovati nella risposta",
-          "warning",
-        );
-      }
+      setNewVouchers(res.vouchers);
+      notify(`Successfully created ${res.vouchers.length} vouchers`, "success");
+      form.reset();
     } catch {
-      notify("Impossibile creare il voucher", "error");
+      notify("Failed to create voucher", "error");
     }
     setLoading(false);
   };
@@ -94,7 +87,7 @@ export default function CustomCreateTab() {
   };
 
   const closeModal = useCallback(() => {
-    setNewVoucher(null);
+    setNewVouchers(null);
   }, []);
 
   return (
@@ -102,7 +95,7 @@ export default function CustomCreateTab() {
       <form onSubmit={handleSubmit} className="card max-w-lg mx-auto space-y-6">
         {[
           {
-            label: "Quantità",
+            label: "Number",
             name: "count",
             type: "number",
             props: {
@@ -113,10 +106,10 @@ export default function CustomCreateTab() {
             },
           },
           {
-            label: "Nome",
+            label: "Name",
             name: "name",
             type: "text",
-            props: { required: true, defaultValue: "Voucher Personalizzato" },
+            props: { required: true, defaultValue: "Custom Voucher" },
           },
         ].map(({ label, name, type, props }) => (
           <div key={name}>
@@ -126,7 +119,7 @@ export default function CustomCreateTab() {
         ))}
 
         <div>
-          <label className="block font-medium mb-1">Durata</label>
+          <label className="block font-medium mb-1">Duration</label>
           <div className="flex-center gap-2">
             <input
               name="duration"
@@ -150,32 +143,32 @@ export default function CustomCreateTab() {
               className="w-auto"
               defaultValue="minutes"
             >
-              <option value="minutes">Minuti</option>
-              <option value="hours">Ore</option>
-              <option value="days">Giorni</option>
+              <option value="minutes">Minutes</option>
+              <option value="hours">Hours</option>
+              <option value="days">Days</option>
             </select>
           </div>
         </div>
 
         {[
           {
-            label: "Limite utenti",
+            label: "Guest Limit",
             name: "guests",
             type: "number",
             props: {
               min: MIN_VOUCHER_GUESTS,
               max: MAX_VOUCHER_GUESTS,
-              placeholder: "Illimitato",
+              placeholder: "Unlimited",
             },
           },
           {
-            label: "Limite dati (MB)",
+            label: "Data Limit (MB)",
             name: "data",
             type: "number",
             props: {
               min: MIN_VOUCHER_DATA_MB,
               max: MAX_VOUCHER_DATA_MB,
-              placeholder: "Illimitato",
+              placeholder: "Unlimited",
             },
           },
           {
@@ -185,7 +178,7 @@ export default function CustomCreateTab() {
             props: {
               min: MIN_VOUCHER_DOWNLOAD_KBPS,
               max: MAX_VOUCHER_DOWNLOAD_KBPS,
-              placeholder: "Illimitato",
+              placeholder: "Unlimited",
             },
           },
           {
@@ -195,7 +188,7 @@ export default function CustomCreateTab() {
             props: {
               min: MIN_VOUCHER_UPLOAD_KBPS,
               max: MAX_VOUCHER_UPLOAD_KBPS,
-              placeholder: "Illimitato",
+              placeholder: "Unlimited",
             },
           },
         ].map(({ label, name, type, props }) => (
@@ -205,10 +198,12 @@ export default function CustomCreateTab() {
           </div>
         ))}
         <button type="submit" disabled={loading} className="btn-primary w-full">
-          {loading ? "Creazione…" : "Crea Voucher personalizzato"}
+          {loading ? "Creating…" : "Create Custom Voucher"}
         </button>
       </form>
-      {newVoucher && <SuccessModal voucher={newVoucher} onClose={closeModal} />}
+      {newVouchers && (
+        <SuccessModal vouchers={newVouchers} onClose={closeModal} />
+      )}
     </div>
   );
 }

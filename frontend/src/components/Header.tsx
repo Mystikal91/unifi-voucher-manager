@@ -4,13 +4,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import ThemeSwitcher from "@/components/utils/ThemeSwitcher";
 import WifiQrModal from "@/components/modals/WifiQrModal";
 import { useGlobal } from "@/contexts/GlobalContext";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [showWifi, setShowWifi] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const router = useRouter();
-  const { wifiConfig, wifiString } = useGlobal();
+  const { runtimeConfig, wifiConfig, wifiString } = useGlobal();
+  const isLogoInvertible = runtimeConfig.IS_LOGO_INVERTIBLE;
   const qrAvailable: boolean = useMemo(
     () => !!(wifiConfig && wifiString),
     [wifiConfig, wifiString],
@@ -38,30 +40,41 @@ export default function Header() {
       className="bg-surface border-b border-default sticky top-0 z-7000"
     >
       <div className="max-w-95/100 mx-auto flex-center-between px-4 py-4 gap-4">
-        <h1 className="text-xl md:text-2xl font-semibold text-brand">
-          <span className="block sm:hidden">UVM</span>
-          <span className="hidden sm:block">UniFi Voucher Manager</span>
-        </h1>
+        <div className="flex-center gap-3">
+          <Image
+            src="/logo.svg"
+            width={35}
+            height={35}
+            loading="eager"
+            alt="UniFi Voucher Manager logo"
+            className={"shrink-0" + (isLogoInvertible ? " dark:invert" : "")}
+          />
+          <h1 className="text-xl md:text-2xl font-semibold text-brand">
+            <span className="block sm:hidden">UVM</span>
+            <span className="hidden sm:block">UniFi Voucher Manager</span>
+          </h1>
+        </div>
         <div className="flex-center gap-3">
           <button
             onClick={() => router.push("/kiosk")}
-            className="btn text-sm p-1 px-2"
-            aria-label="Apri Kiosk"
-            title="Apri Kiosk"
+            className="btn text-xl p-1 px-2 shrink-0"
+            aria-label="Open Kiosk"
+            title="Open Kiosk"
           >
             📺
           </button>
           <button
             onClick={() => setShowWifi(true)}
-            className="btn p-1"
+            className="btn p-1 shrink-0"
             disabled={!qrAvailable}
-            aria-label="Apri QR code Wi‑Fi"
-            title="Apri QR code Wi‑Fi"
+            aria-label="Open Wi‑Fi QR code"
+            title="Open Wi‑Fi QR code"
           >
-            <img
+            <Image
               src="/qr.svg"
-              width={45}
-              height={45}
+              width={28}
+              height={28}
+              loading="eager"
               className="dark:invert"
               alt="QR code icon"
             />

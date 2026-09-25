@@ -2,8 +2,7 @@
 
 import "./styles.css";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
-import { QRCodeSVG } from "qrcode.react";
+import { Suspense, useEffect, useState } from "react";
 import { Voucher } from "@/types/voucher";
 import {
   formatBytes,
@@ -14,135 +13,187 @@ import {
 import { useGlobal } from "@/contexts/GlobalContext";
 import { formatCode } from "@/utils/format";
 import Spinner from "@/components/utils/Spinner";
-
-export type PrintMode = "list" | "grid";
+import { PrintMode } from "@/types/print";
+import { TriState } from "@/types/state";
+import WifiQr from "@/components/utils/WifiQr";
 
 // This component represents a single voucher card to be printed
 function VoucherPrintCard({ voucher }: { voucher: Voucher }) {
-  const { wifiConfig, wifiString } = useGlobal();
+  const { runtimeConfig, wifiConfig, wifiString } = useGlobal();
+  const printConfig = runtimeConfig.PRINT_CONFIG;
 
   const fields = [
     {
-      label: "Durata",
+      label: "Duration",
       value: formatDuration(voucher.timeLimitMinutes),
+      enabled: printConfig.showDuration,
     },
     {
-      label: "Massimi Ospiti",
+      label: "Max Guests",
       value: formatMaxGuests(voucher.authorizedGuestLimit),
+      enabled: printConfig.showMaxGuests,
     },
     {
-      label: "Limite Dati",
+      label: "Data Limit",
       value: voucher.dataUsageLimitMBytes
         ? formatBytes(voucher.dataUsageLimitMBytes * 1024 * 1024)
-        : "Illimitato",
+        : "Unlimited",
+      enabled: printConfig.showDataUsageLimit,
     },
     {
-      label: "Velocità Download",
+      label: "Down Speed",
       value: formatSpeed(voucher.rxRateLimitKbps),
+      enabled: printConfig.showRxRateLimit,
     },
     {
-      label: "Velocità Upload",
+      label: "Up Speed",
       value: formatSpeed(voucher.txRateLimitKbps),
+      enabled: printConfig.showTxRateLimit,
     },
   ];
 
   return (
     <div className="print-voucher">
       <div className="print-header">
-        <div className="print-title">Voucher Accesso WiFi</div>
+        <div className="print-title">WiFi Access Voucher</div>
       </div>
 
       <div className="print-voucher-code">{formatCode(voucher.code)}</div>
 
-      {fields.map((field) => (
-        <div key={`${voucher.id}:${field.label}`} className="print-info-row">
-          <span className="print-label">{field.label}:</span>
-          <span className="print-value">{field.value}</span>
-        </div>
-      ))}
+      {fields.map(
+        (field) =>
+          field.enabled && (
+            <div
+              key={`${voucher.id}:${field.label}`}
+              className="print-info-row"
+            >
+              <span className="print-label">{field.label}:</span>
+              <span className="print-value">{field.value}</span>
+            </div>
+          ),
+      )}
 
-      {wifiConfig && (
+      {wifiConfig && wifiConfig.ssid && (
         <div className="print-qr-section">
           {wifiString && (
             <>
-              <div className="font-bold mb-2">Scansiona per Connetterti</div>
-              <QRCodeSVG
-                value={wifiString}
-                size={140}
-                level="H"
-                marginSize={4}
-                title="Accesso WiFi - QR Code"
+              <div className="font-bold mb-2">Scan to Connect</div>
+              <WifiQr
+                sizeRatio={0.85}
+                imageSrc={printConfig.showLogo ? undefined : ""}
               />
             </>
           )}
           <div className="print-qr-text">
-            <strong>Rete:</strong> {wifiConfig.ssid}
+            <strong>Network:</strong> {wifiConfig.ssid}
             <br />
             {wifiConfig.type === "nopass" ? (
-              "Nessuna Password"
+              "No Password"
             ) : (
               <>
                 <strong>Password:</strong> {wifiConfig.password}
               </>
             )}
-            {wifiConfig.hidden && <div>(Rete Nascosta)</div>}
+            {wifiConfig.hidden && <div>(Hidden Network)</div>}
           </div>
         </div>
       )}
 
-      <div className="print-footer">
-        <div>
-          <strong className="text-sm">ID:</strong> {voucher.id}
+      {(printConfig.showId || printConfig.showPrintTime) && (
+        <div className="print-footer">
+          {printConfig.showId && (
+            <div>
+              <strong className="text-sm">ID:</strong> {voucher.id}
+            </div>
+          )}
+          {printConfig.showPrintTime && (
+            <div>
+              <strong className="text-sm">Printed:</strong>{" "}
+              {new Date().toUTCString()}
+            </div>
+          )}
         </div>
-        <div>
-          <strong className="text-sm">Stampato il:</strong>{" "}
-          {new Date().toLocaleString("it-IT")}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
 
-// This component handles displaying and printing the vouchers based on URL params
+// This component handles displaying and printing the vouchers
 function Vouchers() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [state, setState] = useState<TriState | null>("loading");
+
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
   const [mode, setMode] = useState<PrintMode>("list");
-  const lastSearchParams = useRef<string | null>(null);
+  const [batchId, setBatchId] = useState<string | null>(null);
 
+  // Load print job
   useEffect(() => {
-    const paramString = searchParams.toString();
-    if (lastSearchParams.current === paramString) {
+    setState("loading");
+
+    const id = searchParams.get("batchId");
+    if (!id) {
+      setState("error");
       return;
     }
-    lastSearchParams.current = paramString;
 
-    const vouchersParam = searchParams.get("vouchers");
-    const modeParam = searchParams.get("mode");
-
-    if (!vouchersParam || !modeParam) {
+    const stored = localStorage.getItem(`print-job-${id}`);
+    if (!stored) {
+      setState("error");
       return;
     }
 
     try {
-      const parsedVouchers = JSON.parse(decodeURIComponent(vouchersParam));
-      setVouchers(parsedVouchers);
-      setMode(modeParam as PrintMode);
+      const { vouchers: storedVouchers, mode: storedMode } = JSON.parse(stored);
 
-      setTimeout(() => {
-        window.print();
-        router.replace("/");
-      }, 100);
+      setVouchers(storedVouchers as Voucher[]);
+      setMode((storedMode as PrintMode) || "list");
+      setBatchId(id);
+      setState("ok");
     } catch (error) {
-      console.error("Failed to parse vouchers:", error);
+      console.error("Failed to load print job:", error);
+      setState("error");
     }
-  }, [searchParams, router]);
+  }, [searchParams]);
+
+  // Print once vouchers exist
+  useEffect(() => {
+    if (!vouchers.length || !batchId) {
+      return;
+    }
+
+    const handleAfterPrint = () => {
+      localStorage.removeItem(`print-job-${batchId}`);
+      router.replace("/");
+    };
+    window.addEventListener("afterprint", handleAfterPrint);
+
+    const timer = setTimeout(() => {
+      window.print();
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("afterprint", handleAfterPrint);
+    };
+  }, [vouchers, batchId]);
+
+  const emptyMessage = (() => {
+    switch (state) {
+      case "loading":
+        return "Loading vouchers... please wait...";
+      case "ok":
+        return "No vouchers to print, press escape or backspace.";
+      case "error":
+        return "An error occurred, press escape or backspace.";
+      default:
+        return "An error occurred, press escape or backspace.";
+    }
+  })();
 
   return !vouchers.length ? (
-    <div style={{ textAlign: "center" }}>
-      Nessun Voucher da stampare, premi Esc
-    </div>
+    <div style={{ textAlign: "center" }}>{emptyMessage}</div>
   ) : (
     <div className={mode === "grid" ? "print-grid" : "print-list"}>
       {vouchers.map((v) => (
@@ -152,7 +203,6 @@ function Vouchers() {
   );
 }
 
-// This sets up the print page itself
 export default function PrintPage() {
   const router = useRouter();
 
@@ -162,9 +212,7 @@ export default function PrintPage() {
     };
     window.addEventListener("keydown", onKey);
 
-    return () => {
-      window.removeEventListener("keydown", onKey);
-    };
+    return () => window.removeEventListener("keydown", onKey);
   }, [router]);
 
   return (

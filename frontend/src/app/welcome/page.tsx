@@ -1,18 +1,12 @@
 "use client";
 
+import { useGlobal } from "@/contexts/GlobalContext";
 import { api } from "@/utils/api";
-import { getRuntimeConfig } from "@/utils/runtimeConfig";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function WelcomePage() {
   const [visited, setVisited] = useState(false);
-  const [hasMounted, setHasMounted] = useState(false);
-
-  const ssid = useMemo(() => {
-    if (!hasMounted) return null;
-    const { WIFI_SSID: ssid } = getRuntimeConfig();
-    return ssid;
-  }, [hasMounted, getRuntimeConfig]);
+  const { wifiConfig } = useGlobal();
 
   const rotateVoucher = useCallback(async () => {
     try {
@@ -26,22 +20,22 @@ export default function WelcomePage() {
   }, []);
 
   useEffect(() => {
-    setHasMounted(true);
-
     if (visited) return;
+
     rotateVoucher();
     setVisited(true);
-  }, [rotateVoucher]);
+  }, [rotateVoucher, visited]);
 
   return (
     <main className="flex-center h-screen w-full px-4">
       <div className="w-full text-center font-bold text-4xl sm:text-5xl md:text-7xl lg:text-9xl leading-snug">
-        {ssid ? (
+        {wifiConfig?.ssid ? (
           <>
-            Benvenuto/a su <span className="text-brand font-mono">{ssid}</span>!
+            Welcome to{" "}
+            <span className="text-brand font-mono">{wifiConfig.ssid}</span>!
           </>
         ) : (
-          "Benvenuto!"
+          "Welcome!"
         )}
       </div>
     </main>

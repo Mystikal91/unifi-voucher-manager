@@ -22,6 +22,7 @@ Perfect for businesses, cafes, hotels, and home networks that need to provide gu
   - [Getting UniFi API Credentials](#getting-unifi-api-credentials)
   - [Rolling Vouchers and Kiosk Page](#rolling-vouchers-and-kiosk-page)
     - [How Rolling Vouchers Work](#how-rolling-vouchers-work)
+  - [Custom SVG Logo](#custom-svg-logo)
   - [Environment Variables](#environment-variables)
 - [🐛 Troubleshooting](#-troubleshooting)
   - [Common Issues](#common-issues)
@@ -62,6 +63,7 @@ The kiosk page (`/kiosk`) provides a guest-friendly interface displaying:
 - **Responsive Design** - Works seamlessly across all screen sizes
 - **Smooth Animations** – Semantic transitions for polished UX
 - **Real-time Notifications** - Instant feedback for all operations
+- **Custom SVG Logo** - Display your own logo on the main page
 
 ### 🔧 Technical Features
 
@@ -156,6 +158,15 @@ Rolling vouchers provide a seamless way to automatically generate guest network 
 4. **IP-Based Uniqueness**: Each IP address can only generate one voucher per session (prevents abuse from page reloads)
 5. **Daily Maintenance**: To prevent clutter, expired rolling vouchers are automatically deleted at midnight (based on your configured `TIMEZONE` in [Environment Variables](#environment-variables))
 
+### Custom SVG Logo
+
+To display your own custom logo:
+
+- If you are using docker, simply mount the SVG file in the container at `/app/frontend/public/logo.svg`. An example is in `./compose.yaml`.
+  - The mount destination (including the file name) **CANNOT BE CHANGED**.
+- If you are **not** using docker, place the SVG file in `./frontend/public/logo.svg`.
+  - The path to the logo (including the file name) **CANNOT BE CHANGED**.
+
 ### Environment Variables
 
 Make sure to configure the required variables. The optional variables generally have default values that you should not have to change.
@@ -217,6 +228,9 @@ Make sure to configure the required variables. The optional variables generally 
 - **`ROLLING_VOUCHER_DURATION_MINUTES`: `minutes`** (_Optional_)
   - **Description**: Number of minutes a rolling voucher will be valid for once activated.
   - **Example**: `480` (default)
+- **`PURGE_ALL_EXPIRED_VOUCHERS`: `bool`** (_Optional_)
+  - **Description**: When `true`, periodically purge all expired vouchers. When `false`, periodically only purge expired rolling vouchers.
+  - **Example**: `false` (default)
 - **`WIFI_SSID`: `string`** (_Optional_)
   - **Description**: WiFi SSID used for the QR code. (required for QR code to be generated)
   - **Example**: `My WiFi SSID`
@@ -229,6 +243,12 @@ Make sure to configure the required variables. The optional variables generally 
 - **`WIFI_HIDDEN`: `bool`** (_Optional_)
   - **Description**: Whether the WiFi SSID is hidden or broadcasted.
   - **Example**: `false` (default)
+- **`IS_LOGO_INVERTIBLE`: `bool`** (_Optional_)
+  - **Description**: Whether the logo can/should be inverted in dark mode.
+  - **Example**: `false` (default)
+- **`PRINT_CONFIG`: `JSON object`** (_Optional_)
+  - **Description**: Controls which fields are included when printing vouchers. Any omitted fields default to `true`. Keep in mind the string must contain valid JSON.
+  - **Example**: `{"showLogo":true,"showDuration":true,"showMaxGuests":true,"showDataUsageLimit":true,"showRxRateLimit":true,"showTxRateLimit":true,"showId":true,"showPrintTime":true}` (default)
 
 ## 🐛 Troubleshooting
 
@@ -261,3 +281,5 @@ Make sure to configure the required variables. The optional variables generally 
 ---
 
 **⭐ If this project helped you, please consider giving it a star!**
+
+Disclaimer: This is an independent, unofficial project. It is not affiliated with, endorsed by, or sponsored by Ubiquiti Inc. UniFi, Ubiquiti, and all associated trademarks, logos, and intellectual property are the property of Ubiquiti Inc. Their use in this project is for identification and compatibility purposes only.

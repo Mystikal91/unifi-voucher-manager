@@ -1,4 +1,4 @@
-import { getRuntimeConfig } from "@/utils/runtimeConfig";
+import { RuntimeConfig } from "@/types/config";
 
 // Derive the type from the array for easy printing
 const validWifiTypes = ["WPA", "WEP", "nopass"] as const;
@@ -11,13 +11,13 @@ export interface WifiConfig {
   hidden?: boolean;
 }
 
-export function generateWifiConfig(): WifiConfig {
+export function generateWifiConfig(config: RuntimeConfig): WifiConfig {
   const {
     WIFI_SSID: ssid,
     WIFI_PASSWORD: password,
     WIFI_TYPE: type,
     WIFI_HIDDEN: hidden,
-  } = getRuntimeConfig();
+  } = config;
 
   if (ssid == null) {
     throw "No SSID provided, use the environment variable WIFI_SSID to set one";
@@ -73,10 +73,14 @@ export function generateWifiConfig(): WifiConfig {
   } else {
     switch (hidden.trim().toLowerCase()) {
       case "true":
+      case "y":
+      case "yes":
       case "1":
         hidden_parsed = true;
         break;
       case "false":
+      case "n":
+      case "no":
       case "0":
         hidden_parsed = false;
         break;
@@ -85,13 +89,13 @@ export function generateWifiConfig(): WifiConfig {
     }
   }
 
-  const config: WifiConfig = {
+  const wifi_config: WifiConfig = {
     ssid: ssid,
     password: password,
     type: type_parsed,
     hidden: hidden_parsed,
   };
-  return config;
+  return wifi_config;
 }
 
 export function generateWiFiQRString(config: WifiConfig): string {

@@ -3,12 +3,13 @@
 import Spinner from "@/components/utils/Spinner";
 import VoucherCard from "@/components/VoucherCard";
 import VoucherModal from "@/components/modals/VoucherModal";
-import { PrintMode } from "@/app/print/page";
 import { Voucher } from "@/types/voucher";
 import { api } from "@/utils/api";
 import { notify } from "@/utils/notifications";
 import { useMemo, useEffect, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
+import { PrintMode } from "@/types/print";
+import { storePrintJob } from "@/utils/print";
 
 export default function VouchersTab() {
   const [loading, setLoading] = useState(true);
@@ -45,7 +46,7 @@ export default function VouchersTab() {
       const res = await api.getAllVouchers();
       setVouchers(res.data || []);
     } catch {
-      notify("Impossibile creare i voucher", "error");
+      notify("Failed to load vouchers", "error");
     }
     setLoading(false);
   }, []);
@@ -93,21 +94,23 @@ export default function VouchersTab() {
       try {
         const res =
           kind === "selected"
-            ? await api.deleteSelectedVouchers([...selectedVouchers.map((v) => v.id)])
+            ? await api.deleteSelectedVouchers([
+                ...selectedVouchers.map((v) => v.id),
+              ])
             : await api.deleteSelectedVouchers([...expiredIds]);
 
         const count = res.vouchersDeleted || 0;
         if (count > 0) {
           notify(
-            `${count} voucher${count === 1 ? "" : "s"} ${kind_word} cancellat${count === 1 ? "o" : "i"} con successo`,
+            `Successfully deleted ${count} ${kind_word} voucher${count === 1 ? "" : "s"}`,
             "success",
           );
           setSelectedIds(new Set());
         } else {
-          notify(`Nessun vouchers ${kind_word} cancellato`, "info");
+          notify(`No ${kind_word} vouchers were deleted`, "info");
         }
       } catch {
-        notify(`Impossibile cancellare voucher ${kind_word}`, "error");
+        notify(`Failed to delete ${kind_word} vouchers`, "error");
       }
       setBusy(false);
       cancelEdit();
@@ -131,11 +134,8 @@ export default function VouchersTab() {
   }, [load, cancelEdit]);
 
   const handlePrintClick = (mode: PrintMode) => {
-    // Prepare the data for the URL
-    const vouchersParam = encodeURIComponent(JSON.stringify(vouchers));
-    const printUrl = `/print?vouchers=${vouchersParam}&mode=${mode}`;
-
-    router.replace(printUrl);
+    const batchId = storePrintJob(selectedVouchers, mode);
+    router.replace(`/print?batchId=${batchId}`);
   };
 
   return (
@@ -144,7 +144,7 @@ export default function VouchersTab() {
         <div className="relative">
           <input
             type="text"
-            placeholder="Cerca voucher per nome..."
+            placeholder="Search vouchers by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -162,10 +162,10 @@ export default function VouchersTab() {
         {!editMode ? (
           <>
             <button onClick={startEdit} className="btn-primary">
-              Modalità Modifica
+              Edit Mode
             </button>
             <button onClick={load} className="btn-secondary">
-              Aggiorna
+              Refresh
             </button>
           </>
         ) : (
@@ -175,42 +175,42 @@ export default function VouchersTab() {
               disabled={!filteredVouchers.length}
               className="btn-primary"
             >
-              Seleziona tutti
+              Select All
             </button>
             <button
               onClick={() => handlePrintClick("grid")}
               disabled={!selectedVouchers.length}
               className="btn-secondary"
             >
-              Stampa (Casella)
+              Print (Grid)
             </button>
             <button
               onClick={() => handlePrintClick("list")}
               disabled={!selectedVouchers.length}
               className="btn-secondary"
             >
-              Stampa (Lista)
+              Print (List)
             </button>
             <button
               onClick={() => deleteVouchers("selected")}
               disabled={busy || !selectedVouchers.length}
               className="btn-danger"
             >
-              Cancella Selezionato
+              Delete Selected
             </button>
             <button
               onClick={() => deleteVouchers("expired")}
               disabled={busy || !expiredIds.length}
               className="btn-warning"
             >
-              Cancella Scaduti
+              Delete Expired
             </button>
             <button onClick={cancelEdit} className="btn-primary">
-              Annulla
+              Cancel
             </button>
             {busy ? <Spinner /> : <></>}
             <span className="text-sm text-secondary font-bold ml-auto">
-              {selectedVouchers.length} selezionat{selectedVouchers.length === 1 ? "o" : "i"}
+              {selectedVouchers.length} selected
             </span>
           </>
         )}
@@ -218,7 +218,7 @@ export default function VouchersTab() {
 
       {searchQuery && (
         <div className="mb-4 text-sm text-secondary">
-          Mostrando {filteredVouchers.length} di {vouchers.length} vouchers
+          Showing {filteredVouchers.length} of {vouchers.length} vouchers
         </div>
       )}
 
@@ -227,8 +227,8 @@ export default function VouchersTab() {
       ) : !filteredVouchers.length ? (
         <div className="text-center py-8 text-secondary">
           {searchQuery
-            ? "Nessun voucher trovato che corrisponde alla ricerca"
-            : "Nessun voucher trovato"}
+            ? "No vouchers found matching your search"
+            : "No vouchers found"}
         </div>
       ) : (
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

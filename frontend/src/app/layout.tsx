@@ -18,12 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Load runtime config */}
-        <script src="/runtime-config.js"></script>
-      </head>
-      <body className={`antialiased`}>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <body className="antialiased">
         <GlobalProvider>{children}</GlobalProvider>
       </body>
     </html>
