@@ -41,7 +41,7 @@ export default function CustomCreateTab() {
     const unit = String(data.get("durationUnit") || "minutes") as TimeUnit;
 
     if (!Number.isFinite(rawDuration) || rawDuration <= 0) {
-      notify("Duration must be a positive number", "error");
+      notify("La durata deve essere un valore positivo", "error");
       setLoading(false);
       return;
     }
@@ -52,7 +52,7 @@ export default function CustomCreateTab() {
 
     if (durationMinutes > MAX_VOUCHER_DURATION_MINUTES) {
       notify(
-        `Duration too long. Maximum allowed is ${MAX_VOUCHER_DURATION_MINUTES} minutes`,
+        `La durata è troppo lunga. La massima durata concessa è di ${MAX_VOUCHER_DURATION_MINUTES} minuti`,
         "error",
       );
       setLoading(false);
@@ -75,7 +75,7 @@ export default function CustomCreateTab() {
       notify(`Successfully created ${res.vouchers.length} vouchers`, "success");
       form.reset();
     } catch {
-      notify("Failed to create voucher", "error");
+      notify("Impossibile creare il voucher", "error");
     }
     setLoading(false);
   };
@@ -95,7 +95,7 @@ export default function CustomCreateTab() {
       <form onSubmit={handleSubmit} className="card max-w-lg mx-auto space-y-6">
         {[
           {
-            label: "Number",
+            label: "Numero",
             name: "count",
             type: "number",
             props: {
@@ -106,10 +106,10 @@ export default function CustomCreateTab() {
             },
           },
           {
-            label: "Name",
+            label: "Nome",
             name: "name",
             type: "text",
-            props: { required: true, defaultValue: "Custom Voucher" },
+            props: { required: true, defaultValue: "Voucher Personalizzato" },
           },
         ].map(({ label, name, type, props }) => (
           <div key={name}>
@@ -119,7 +119,7 @@ export default function CustomCreateTab() {
         ))}
 
         <div>
-          <label className="block font-medium mb-1">Duration</label>
+          <label className="block font-medium mb-1">Durata</label>
           <div className="flex-center gap-2">
             <input
               name="duration"
@@ -143,16 +143,16 @@ export default function CustomCreateTab() {
               className="w-auto"
               defaultValue="minutes"
             >
-              <option value="minutes">Minutes</option>
-              <option value="hours">Hours</option>
-              <option value="days">Days</option>
+              <option value="minutes">Minuti</option>
+              <option value="hours">Ore</option>
+              <option value="days">Giorni</option>
             </select>
           </div>
         </div>
 
         {[
           {
-            label: "Guest Limit",
+            label: "Limite Ospiti",
             name: "guests",
             type: "number",
             props: {
@@ -162,7 +162,7 @@ export default function CustomCreateTab() {
             },
           },
           {
-            label: "Data Limit (MB)",
+            label: "Limite Dati (MB)",
             name: "data",
             type: "number",
             props: {
@@ -198,7 +198,7 @@ export default function CustomCreateTab() {
           </div>
         ))}
         <button type="submit" disabled={loading} className="btn-primary w-full">
-          {loading ? "Creating…" : "Create Custom Voucher"}
+          {loading ? "Creazione…" : "Creazione Voucher Personalizzata"}
         </button>
       </form>
       {newVouchers && (
