@@ -158,7 +158,7 @@ export default function CustomCreateTab() {
             props: {
               min: MIN_VOUCHER_GUESTS,
               max: MAX_VOUCHER_GUESTS,
-              placeholder: "Unlimited",
+              placeholder: "Illimitato",
             },
           },
           {
@@ -168,7 +168,7 @@ export default function CustomCreateTab() {
             props: {
               min: MIN_VOUCHER_DATA_MB,
               max: MAX_VOUCHER_DATA_MB,
-              placeholder: "Unlimited",
+              placeholder: "Illimitato",
             },
           },
           {
@@ -178,7 +178,7 @@ export default function CustomCreateTab() {
             props: {
               min: MIN_VOUCHER_DOWNLOAD_KBPS,
               max: MAX_VOUCHER_DOWNLOAD_KBPS,
-              placeholder: "Unlimited",
+              placeholder: "Illimitato",
             },
           },
           {
@@ -188,7 +188,7 @@ export default function CustomCreateTab() {
             props: {
               min: MIN_VOUCHER_UPLOAD_KBPS,
               max: MAX_VOUCHER_UPLOAD_KBPS,
-              placeholder: "Unlimited",
+              placeholder: "Illimitato",
             },
           },
         ].map(({ label, name, type, props }) => (
