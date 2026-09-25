@@ -80,7 +80,7 @@ export default function WifiQr({
               imageSettings={imageSettings}
             />
             <p className="text-sm text-muted">
-              Scansiona per Connetterti <strong>{wifiConfig.ssid}</strong>
+              Connettiti a <strong>{wifiConfig.ssid}</strong>
             </p>
           </>
         ) : (
