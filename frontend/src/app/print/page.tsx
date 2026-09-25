@@ -24,29 +24,29 @@ function VoucherPrintCard({ voucher }: { voucher: Voucher }) {
 
   const fields = [
     {
-      label: "Duration",
+      label: "Durata",
       value: formatDuration(voucher.timeLimitMinutes),
       enabled: printConfig.showDuration,
     },
     {
-      label: "Max Guests",
+      label: "Ospiti Massimi",
       value: formatMaxGuests(voucher.authorizedGuestLimit),
       enabled: printConfig.showMaxGuests,
     },
     {
-      label: "Data Limit",
+      label: "Limite Dati",
       value: voucher.dataUsageLimitMBytes
         ? formatBytes(voucher.dataUsageLimitMBytes * 1024 * 1024)
-        : "Unlimited",
+        : "Illimitato",
       enabled: printConfig.showDataUsageLimit,
     },
     {
-      label: "Down Speed",
+      label: "Velocità Dowload",
       value: formatSpeed(voucher.rxRateLimitKbps),
       enabled: printConfig.showRxRateLimit,
     },
     {
-      label: "Up Speed",
+      label: "Velocità Upload",
       value: formatSpeed(voucher.txRateLimitKbps),
       enabled: printConfig.showTxRateLimit,
     },
@@ -55,7 +55,7 @@ function VoucherPrintCard({ voucher }: { voucher: Voucher }) {
   return (
     <div className="print-voucher">
       <div className="print-header">
-        <div className="print-title">WiFi Access Voucher</div>
+        <div className="print-title">Voucher Accesso WiFi</div>
       </div>
 
       <div className="print-voucher-code">{formatCode(voucher.code)}</div>
@@ -77,7 +77,7 @@ function VoucherPrintCard({ voucher }: { voucher: Voucher }) {
         <div className="print-qr-section">
           {wifiString && (
             <>
-              <div className="font-bold mb-2">Scan to Connect</div>
+              <div className="font-bold mb-2">Scansiona per Connetterti</div>
               <WifiQr
                 sizeRatio={0.85}
                 imageSrc={printConfig.showLogo ? undefined : ""}
@@ -85,16 +85,16 @@ function VoucherPrintCard({ voucher }: { voucher: Voucher }) {
             </>
           )}
           <div className="print-qr-text">
-            <strong>Network:</strong> {wifiConfig.ssid}
+            <strong>Rete:</strong> {wifiConfig.ssid}
             <br />
             {wifiConfig.type === "nopass" ? (
-              "No Password"
+              "Nessuna Password"
             ) : (
               <>
                 <strong>Password:</strong> {wifiConfig.password}
               </>
             )}
-            {wifiConfig.hidden && <div>(Hidden Network)</div>}
+            {wifiConfig.hidden && <div>(Rete Nascosta)</div>}
           </div>
         </div>
       )}
@@ -108,7 +108,7 @@ function VoucherPrintCard({ voucher }: { voucher: Voucher }) {
           )}
           {printConfig.showPrintTime && (
             <div>
-              <strong className="text-sm">Printed:</strong>{" "}
+              <strong className="text-sm">Stampato il:</strong>{" "}
               {new Date().toUTCString()}
             </div>
           )}
@@ -182,13 +182,13 @@ function Vouchers() {
   const emptyMessage = (() => {
     switch (state) {
       case "loading":
-        return "Loading vouchers... please wait...";
+        return "Caricando i voucher... attendi...";
       case "ok":
-        return "No vouchers to print, press escape or backspace.";
+        return "Nessun vouchers da stampare, premi esc o backspace.";
       case "error":
-        return "An error occurred, press escape or backspace.";
+        return "Si è verificato un errore, premi esc o backspace.";
       default:
-        return "An error occurred, press escape or backspace.";
+        return "Si è verificato un errore, premi esc o backspace.";
     }
   })();
 
